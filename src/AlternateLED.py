@@ -1,32 +1,37 @@
 import RPi.GPIO as GPIO
 import time
 
-print("Starting LED show")
-
 blueLedOut = 17
 redLedOut = 27
-
 buttonIn = 22
 
-GPIO.setmode(GPIO.BCM)
 
-GPIO.setup(blueLedOut, GPIO.OUT)
-GPIO.setup(redLedOut, GPIO.OUT)
+def setup():
+    GPIO.setmode(GPIO.BCM)
 
-# GPIO.setup(buttonIn, GPIO.IN)
+    GPIO.setup(blueLedOut, GPIO.OUT)
+    GPIO.setup(redLedOut, GPIO.OUT)
 
-GPIO.output(redLedOut, True)
-time.sleep(.5)
+    # GPIO.setup(buttonIn, GPIO.IN)
 
-GPIO.output(redLedOut, False)
-time.sleep(.5)
 
-GPIO.output(redLedOut, True)
-time.sleep(.5)
+def blink(pin, iteration):
+    light_on = True
 
-GPIO.output(redLedOut, False)
-time.sleep(.5)
+    for _ in range(iteration * 2):
+        GPIO.output(pin, light_on)
+        time.sleep(.5)
+        light_on = not light_on
 
-print("End of LED Show")
 
-GPIO.cleanup()
+def main():
+    try:
+        print("Starting LED show")
+        setup()
+        blink(redLedOut, 2)
+        print("End of LED Show")
+    finally:
+        GPIO.cleanup()
+
+
+main()
