@@ -1,3 +1,4 @@
+import threading
 import RPi.GPIO as GPIO
 import time
 
@@ -27,8 +28,18 @@ def blink(pin, iteration):
 def main():
     try:
         print("Starting LED show")
+
         setup()
-        blink(redLedOut, 2)
+
+        red_led_thread = threading.Thread(target=blink, args=(redLedOut, 10))
+        blue_led_thread = threading.Thread(target=blink, args=(blueLedOut, 10))
+
+        red_led_thread.start()
+        blue_led_thread.start()
+
+        red_led_thread.join()
+        blue_led_thread.join()
+
         print("End of LED Show")
     finally:
         GPIO.cleanup()
